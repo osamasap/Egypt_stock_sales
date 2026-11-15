@@ -1,0 +1,54 @@
+# ERPNext + Egypt Stock & Sales — Docker test setup
+#
+# Run on a machine/server with Docker and at least 4 GB free RAM.
+# This VM (Muse) has no Docker and only ~0.5 GB free RAM, so a full
+# ERPNext stack cannot run here. Use this file on your own machine.
+#
+# 1. docker compose up -d
+#    Wait 2-3 minutes, then open http://localhost:8080
+#    Login: Administrator / admin
+# 2. Install this app inside the backend container:
+#    docker compose exec backend bench --site erpnext.localhost get-app https://github.com/osamasap/Egypt_stock_sales
+#    docker compose exec backend bench --site erpnext.localhost install-app egypt_stock_sales
+#    docker compose exec backend bench --site erpnext.localhost migrate
+#    Or run: ./install.sh
+
+services:
+  backend:
+    image: frappe/erpnext:v16
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - MYSQL_ROOT_PASSWORD=admin
+      - REDIS_CACHE=redis-cache:6379
+      - REDIS_QUEUE=redis-queue:6379
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - logs:/home/frappe/frappe-bench/logs
+    ports:
+      - "8080:8000"
+    depends_on:
+      - db
+      - redis-cache
+      - redis-queue
+
+  db:
+    image: mariadb:10.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+    volumes:
+      - db-data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  redis-cache:
+    image: redis:7-alpine
+
+  redis-queue:
+    image: redis:7-alpine
+
+volumes:
+  sites:
+  logs:
+  db-data:
