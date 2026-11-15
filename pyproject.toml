@@ -1,0 +1,19 @@
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "egypt_stock_sales"
+authors = [{name = "Osama", email = "osamasap@users.noreply.github.com"}]
+description = "Inventory and sales for the Egyptian market on ERPNext"
+readme = "README.md"
+license = {text = "GPL-3.0"}
+requires-python = ">=3.10"
+dependencies = ["frappe"]
+
+[project.urls]
+Homepage = "https://github.com/osamasap/Egypt_stock_sales"
+Repository = "https://github.com/osamasap/Egypt_stock_sales"
+
+[tool.flit.module]
+name = "egypt_stock_sales"
